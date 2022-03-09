@@ -2,26 +2,18 @@
 
 // maxheap functions file
 
-// Commented out function was given as example from TA Michael
-// void print_heap_node(SOC * heapPointer){
-//     std::cout << heapPointer->occupation << std::endl;
-//     std::cout << heapPointer->SOC_code << std::endl;
-//     std::cout << heapPointer->total << std::endl;
-//     std::cout << heapPointer->female << std::endl;
-//     std::cout << heapPointer->male << std::endl;
-// }
+int test(){
+    int test = 50000000;
+    return test;
+}
 
 void BUILD_MAX_HEAP(struct SOC socArr[], int n){    // Function builds the max heap
     struct SOC temp;
-    for(int i = n/2-1; i >= 0; i--){   
-        MAX_HEAPIFY(socArr, n, i);
-    }
-    for(int i = n-1; i > 0; i--){
-        temp = socArr[0];
-        socArr[0] = socArr[i];
-        socArr[i] = temp;
 
-        MAX_HEAPIFY(socArr, i, 0);
+    int start = (n/2) - 1;
+
+    for(int i = start; i >= 0; i--){
+        MAX_HEAPIFY(socArr, n, i);
     }
 }
 
@@ -46,14 +38,50 @@ void MAX_HEAPIFY(struct SOC socArr[], int i, int n){    // Max Heapify function 
     }
 }
 
-void DELETE_MAX(struct SOC socArr[], int i, int n){ // Unfinished and untested Delete Max function!
-    struct SOC last = socArr[i-1];
+void DELETE_MAX(struct SOC socArr[], int size, int topNumber, char key){ // Unfinished and untested Delete Max function!
+    struct SOC last = socArr[size-1];
+    
 
-    printf("Top %d occupations from 1999 for "  ,n);
+    if(key == 't'){
+        if(size == NUM_OCC){
+            printf("Top %d occupations in 1999 for total workers:\n"  ,topNumber);
+        }
+        int v = socArr[0].total;
+        auto s = std::to_string(v);
 
-    socArr[0] = last;
+        int n = s.length() - 3;
+        int end = (v >= 0) ? 0 : 1; 
+        while (n > end) {
+            s.insert(n, ",");
+            n -= 3;
+        }
+        
+        std::cout << "\t" << socArr[0].occupation << ": " << s << std::endl;
+        //printf("\t%s: %c\n" ,socArr[0].occupation, s);
 
-    i = i - 1;  // Decrement the size
+        socArr[0] = last;
 
-    MAX_HEAPIFY(socArr, i, 0);
+        MAX_HEAPIFY(socArr, size, 0);
+    }
+    else if(key == 'f'){
+        printf("Top %d occupations from 1999 for female works:\n"  ,topNumber);
+        printf("%s\n" , socArr[0].occupation);
+        socArr[0] = last;
+
+        size = size - 1;  // Decrement the size
+
+        MAX_HEAPIFY(socArr, size, 0);
+    }
+    else if(key == 'm'){
+        printf("Top %d occupations from 1999 for male works:\n"  ,topNumber);
+        printf("%s\n" , socArr[0].occupation);
+        socArr[0] = last;
+
+        size = size - 1;  // Decrement the size
+
+        MAX_HEAPIFY(socArr, size, 0);
+    }
+    else{
+        printf("Error in delete_max has occured!");
+    }    
 }
