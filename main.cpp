@@ -13,14 +13,53 @@
 using namespace std;
 
 
-int main(){
+
+int main(int argc,char* argv[]){
+    std::locale loc;
     struct SOC soc[NUM_OCC];
+
+
+    string year = argv[1];
+    string fileYear = "Occupation-Dist-All-" + year + ".csv";
+
+    string query = "";
+    int qNum = 0;
+    string queries[50];     // String array that will hold all the queries
+    int c = 0;
+    string empty = "";
+
+    while(getline(cin, query)){
+        if(isdigit(query[0], loc) == true){     // Saves the number of queries which is the first line
+            qNum = std::stoi(query);
+            string queries[qNum];
+        }
+        // Must continue here by saving the queries that I need to do for the total number of queries given
+        // ie qNum!
+        else{
+            queries[c] = query;
+            c++;
+        }
+    }
+
+
+    
+    
+
+
+
+
+
+
+
 
 
     // Time to read the csv file!
     ifstream occFile;  // ifStream variable to read through the file
-    occFile.open("Occupation-Dist-All-1999.csv");  // Opens Occupation.csv file
-    
+    occFile.open(fileYear);  // Opens Occupation.csv file
+    if(occFile.fail()){    // Makes sure the file is acutally open
+        cerr << "Error openning file, file not found" << endl;
+        exit(1);
+    }
     
     string line = "";   // Line will hold the value of each line in file
     int count = 5;  // Count will be used to skip through the first 5 lines of OCC.csv file
@@ -72,7 +111,7 @@ int main(){
         }
 
 
-        string empty = "";  // Holds empty values while scanning through line
+        empty = "";  // Holds empty values while scanning through line
         stringstream inputString(line);     // Initializing scanning variable
 
         if(occ_quoted == true){     // If the current line's occupation contained commas, there are "" around that section still so
@@ -113,14 +152,85 @@ int main(){
         index++;    // Current index incremented to keep track of current line and accompanying SOC array position
     }
     
-    /*  Unworking portion commented away
-    ----------------------------------
-    SOC * socPointer;
-    socPointer = soc;
 
-    BUILD_MAX_HEAP(soc, NUM_OCC);   // Code returns error : undefined reference, couldn't get it to work :_(
-    -----------------------------------
-    */
+    //  Unworking portion commented away
+    // ----------------------------------
+    // SOC * socPointer;
+    // socPointer = soc;
+
+
+
+    char key = '\0';
+    string temp = "";
+    int numMax = 0;        // Number of max position the query wants to know
+    string nM;             // String version of numMax before convertion
+
+    for(int i = 0; i<qNum; i++){
+        nM = "";
+        temp = queries[i];
+
+        if(queries[i].size() == 20){
+            //cout << "Its a ratio!" << endl;
+            // Do nothing yet...
+        }
+        else{
+            cout << "Its a max!" << endl;
+            if(temp[9] == 't'){
+                cout << "Asking for total" << endl;
+                key = 't';
+                c = 15;
+                while(temp[c] != '\0'){
+                    nM = nM + temp[c];
+                    c++;
+                }
+                numMax = std::stoi(nM);
+
+                BUILD_MAX_HEAP(soc, NUM_OCC);   // Code returns error : undefined reference, couldn't get it to work :_(
+
+                for(int i = 0; i < numMax; i++){
+                    DELETE_MAX(soc, index, numMax, key);
+                    index--;
+                } 
+
+
+            }
+
+            else if(temp[9] == 'f'){
+                cout << "Asking for female" << endl;
+                key = 'f';
+                c = 16;
+                while(temp[c] != '\0'){
+                    nM = nM + temp[c];
+                    c++;
+                }
+                numMax = std::stoi(nM);
+                cout << numMax << endl;
+            }
+            else{
+                cout << "Asking for male" << endl;
+                key = 'm';
+                c = 14;
+                while(temp[c] != '\0'){
+                    nM = nM + temp[c];
+                    c++;
+                }
+                numMax = std::stoi(nM);
+                cout << numMax << endl;
+            }
+            // Here the calculation involved in 
+        }
+    }
+
+
+
+
+
+
+
+
+
+    // -----------------------------------
+
 
     return 0;
 }
